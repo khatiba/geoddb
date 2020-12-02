@@ -14,7 +14,10 @@ class GeoDDB:
     def get_pk_value(self, geohash: str) -> str:
         return f'{self.prefix}{geohash}'
 
-    def put_item(self, lat: float, lon: float, data: dict, **kwargs) -> dict:
+    def put_item(self, lat: float, lon: float, data: dict, ddb_kwargs=None) -> dict:
+        if not ddb_kwargs:
+            ddb_kwargs = {}
+
         item = {}
         item.update(data)
 
@@ -22,11 +25,9 @@ class GeoDDB:
         geohash = encode(lat, lon, self.precision)
         item[self.pk_name] = self.get_pk_value(geohash)
 
-        return self.table.put_item(Item=item, **kwargs)
+        return self.table.put_item(Item=item, **ddb_kwargs)
 
-    def query(self, lat: float, lon: float,
-              include_neighbors=True, include_all_pages=True, ddb_kwargs=None) -> [dict]:
-
+    def query(self, lat: float, lon: float, include_neighbors=True, include_all_pages=True, ddb_kwargs=None) -> [dict]:
         if not ddb_kwargs:
             ddb_kwargs = {}
 
@@ -45,14 +46,14 @@ class GeoDDB:
             if extra_key_condition:
                 key_condition_expression &= extra_key_condition
 
-            rv = self.table.query(KeyConditionExpression=key_condition_expression, **ddb_kwargs)
-            results += rv['Items']
+            resp = self.table.query(KeyConditionExpression=key_condition_expression, **ddb_kwargs)
+            results += resp['Items']
 
             if include_all_pages:
                 # exhaustively walk all results if paginated
-                while 'LastEvaluatedKey' in rv:
-                    rv = self.table.query(KeyConditionExpression=key_condition_expression, ExclusiveStartKey=rv['LastEvaluatedKey'], **ddb_kwargs)
-                    results += rv['Items']
+                while 'LastEvaluatedKey' in resp:
+                    resp = self.table.query(KeyConditionExpression=key_condition_expression, ExclusiveStartKey=resp['LastEvaluatedKey'], **ddb_kwargs)
+                    results += resp['Items']
 
         return results
 
