@@ -3,7 +3,7 @@ Geohash implementation using Gustavo Niemeyer's system: https://en.wikipedia.org
 """
 
 
-# geohash uses base32 to represent it's values: https://en.wikipedia.org/wiki/Geohash#Textual_representation
+# geohash uses base32 to represent its values: https://en.wikipedia.org/wiki/Geohash#Textual_representation
 ghs32 = '0123456789bcdefghjkmnpqrstuvwxyz'
 
 
