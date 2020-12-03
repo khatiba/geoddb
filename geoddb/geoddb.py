@@ -1,6 +1,6 @@
 from boto3.dynamodb.conditions import Key
 from boto3.dynamodb.table import TableResource
-from geohash import encode, neighbors
+from .geohash import encode, neighbors
 
 
 class GeoDDB:
