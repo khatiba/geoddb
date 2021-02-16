@@ -42,7 +42,7 @@ class GeoDDB:
 
         results = []
         for hash in hashes:
-            key_condition_expression = Key('PK').eq(self.get_pk_value(hash))
+            key_condition_expression = Key(self.pk_name).eq(self.get_pk_value(hash))
             if extra_key_condition:
                 key_condition_expression &= extra_key_condition
 
