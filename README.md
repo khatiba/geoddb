@@ -6,7 +6,7 @@ GeoDDB is a simple Python module that helps you store and query your location da
 ## Getting Started
 
 - GeoDDB does _not_ require a new or separate table, you should create a table if you don't already have one
-    - For more information on single-table design refer to Rick Houlihan's epic re:Invent talk on [Advanced design patterns with DynamoDB](https://www.youtube.com/watch?v=6yqfmXiZTlM) and his [other talk](https://www.youtube.com/watch?v=KYy8X8t4MB8) specifically on single-table design. See also re:Invent 2020 talks by [Alex DeBrie](https://www.alexdebrie.com) on data modeling in DynamoDB [Part 1](https://virtual.awsevents.com/media/1_8sijtjhh) and [Part 2](https://virtual.awsevents.com/media/1_2dvdhgl7).
+    - For more information on single-table design refer to Rick Houlihan's re:Invent talk on [Advanced design patterns with DynamoDB](https://www.youtube.com/watch?v=6yqfmXiZTlM) and his [other talk](https://www.youtube.com/watch?v=KYy8X8t4MB8) specifically on single-table design. See also re:Invent 2020 talks by [Alex DeBrie](https://www.alexdebrie.com) on data modeling in DynamoDB [Part 1](https://virtual.awsevents.com/media/1_8sijtjhh) and [Part 2](https://virtual.awsevents.com/media/1_2dvdhgl7).
 - GeoDDB does _not_ create or require local secondary indexes or global secondary indexes
     - You can certainly use LSIs and/or GSIs but this module doesn't require them
 - GeoDDB does _not_ require a sort/range key, just tell it the name of your partition key
@@ -14,7 +14,7 @@ GeoDDB is a simple Python module that helps you store and query your location da
 
 
 ### Installation
-This package comes with it's own [Geohash](https://en.wikipedia.org/wiki/Geohash) implementation, so the only dependency is [boto3](https://github.com/boto/boto3).
+This package comes with its own [Geohash](https://en.wikipedia.org/wiki/Geohash) implementation, so the only dependency is [boto3](https://github.com/boto/boto3).
 ```bash
 pip install geoddb
 ```
