@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name='geoddb',
-    version='0.1.0',
+    version='0.1.1',
     scripts=[] ,
     author='Ahmad Khatib',
     author_email='ackhatib@gmail.com',
