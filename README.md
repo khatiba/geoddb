@@ -115,13 +115,23 @@ GeoDDB does not require, nor will it create a separate table or additional index
 GeoDDB supports filtering results by distance using the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula) for accurate great-circle distance. Use `query_radius` to get all items within a given radius in kilometers, sorted nearest-first:
 
 ```python
+from geoddb import GeoDDB, GeoItem
+
 results = gddb.query_radius(myLat, myLon, radius_km=2.0)
 
 for item in results:
-    print(item['Name'], item['_distance_km'], 'km away')
+    print(item.data['Name'], item.distance_km, 'km away')
 ```
 
-Each returned item includes a `_distance_km` field with the distance from the query point. Results are sorted by distance, nearest first.
+Results are returned as `GeoItem` dataclass instances sorted by distance, nearest first. Each `GeoItem` has the following fields:
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `lat` | `float` | Item latitude |
+| `lon` | `float` | Item longitude |
+| `distance_km` | `float` | Distance from the query point in km |
+| `geohash` | `str` | Geohash of the item |
+| `data` | `dict` | The raw DynamoDB item |
 
 By default, `query_radius` expects your stored items to have `lat` and `lon` attributes. If your items use different attribute names, specify them:
 
