@@ -112,9 +112,26 @@ GeoDDB does not require, nor will it create a separate table or additional index
 
 
 ### Radius Filtering
-Filtering results by an arbitrary radius is not supported. Geohashes are rectangular and their sizes depend on your chosen precision. Consider controlling results with an appropriate choice of geohash length. At most nine (9) queries are executed and return results within a 3x3 rectangle containing your geohash and its neighbors. Choose your geohash precision so that your desired query range is within the corresponding cell dimensions. This will ensure that results lie within at least 1 cell size from the search point. See [table](#geohash-cell-dimensions) of geohash length and rectangular dimensions.
+GeoDDB supports filtering results by distance using the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula) for accurate great-circle distance. Use `query_radius` to get all items within a given radius in kilometers, sorted nearest-first:
 
-You can of course use the [Haversine formula](https://en.wikipedia.org/wiki/Haversine_formula) to calculate accurate great circle distance and filter in your application. For small distances, a better performing approximation using an [equirectangular projection](https://en.wikipedia.org/wiki/Equirectangular_projection) might also be suitable. Note again, at most 9 cells are queried, so your radius of interest shouldn't be larger than the shortest side of the 3x3 cell rectangle.
+```python
+results = gddb.query_radius(myLat, myLon, radius_km=2.0)
+
+for item in results:
+    print(item['Name'], item['_distance_km'], 'km away')
+```
+
+Each returned item includes a `_distance_km` field with the distance from the query point. Results are sorted by distance, nearest first.
+
+By default, `query_radius` expects your stored items to have `lat` and `lon` attributes. If your items use different attribute names, specify them:
+
+```python
+results = gddb.query_radius(myLat, myLon, radius_km=5.0, lat_attr='latitude', lon_attr='longitude')
+```
+
+`query_radius` also accepts `ddb_kwargs` and `include_all_pages` just like `query`.
+
+Note that at most 9 geohash cells are queried, so your radius shouldn't be larger than the shortest side of the 3x3 cell rectangle. Choose your geohash precision so that the cell dimensions cover your desired search radius. See [table](#geohash-cell-dimensions) for geohash length and rectangular dimensions.
 
 You may also set different geohash lengths for different types of your location data. For example: a 5 character long geohash is probably okay for coffee shop searches but not for airports where 3-4 characters might be more appropriate.
 
