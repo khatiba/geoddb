@@ -177,10 +177,3 @@ Cell dimensions change with latitude, these are approximate.
 |  10              |  1.2m x 59.5cm     |
 |  11              |  14.9cm x 14.9cm   |
 |  12              |  3.7cm x 1.9cm     |
-
-
-
-
-# Bugs?!
-Maybe... Probably, I don't have any tests yet :/
-
