@@ -2,6 +2,21 @@
 Geohash implementation using Gustavo Niemeyer's system: https://en.wikipedia.org/wiki/Geohash
 """
 
+from math import radians, sin, cos, sqrt, atan2
+
+EARTH_RADIUS_KM = 6371
+
+
+def haversine(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    """
+    Calculate the great-circle distance in km between two points using the Haversine formula.
+    """
+    lat1, lon1, lat2, lon2 = radians(lat1), radians(lon1), radians(lat2), radians(lon2)
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    return EARTH_RADIUS_KM * 2 * atan2(sqrt(a), sqrt(1 - a))
+
 
 # geohash uses base32 to represent its values: https://en.wikipedia.org/wiki/Geohash#Textual_representation
 ghs32 = '0123456789bcdefghjkmnpqrstuvwxyz'

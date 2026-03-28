@@ -1,6 +1,6 @@
 from boto3.dynamodb.conditions import Key
 from boto3.dynamodb.table import TableResource
-from .geohash import encode, neighbors
+from .geohash import encode, neighbors, haversine
 
 
 class GeoDDB:
@@ -55,5 +55,39 @@ class GeoDDB:
                     resp = self.table.query(KeyConditionExpression=key_condition_expression, ExclusiveStartKey=resp['LastEvaluatedKey'], **ddb_kwargs)
                     results += resp['Items']
 
+        return results
+
+    def query_radius(self, lat: float, lon: float, radius_km: float,
+                     lat_attr='lat', lon_attr='lon',
+                     include_all_pages=True, ddb_kwargs=None) -> [dict]:
+        """
+        Query items within a radius (km) of a point, filtered by Haversine distance
+        and sorted nearest-first. Each returned item has a '_distance_km' key added.
+
+        Args:
+            lat: query center latitude
+            lon: query center longitude
+            radius_km: maximum distance in kilometers
+            lat_attr: name of the latitude attribute stored in items
+            lon_attr: name of the longitude attribute stored in items
+            include_all_pages: exhaust DynamoDB pagination
+            ddb_kwargs: extra kwargs forwarded to table.query()
+
+        Returns:
+            list of items within the radius, sorted by distance, each with '_distance_km'
+        """
+        items = self.query(lat, lon, include_neighbors=True,
+                           include_all_pages=include_all_pages, ddb_kwargs=ddb_kwargs)
+
+        results = []
+        for item in items:
+            item_lat = float(item[lat_attr])
+            item_lon = float(item[lon_attr])
+            dist = haversine(lat, lon, item_lat, item_lon)
+            if dist <= radius_km:
+                item['_distance_km'] = round(dist, 6)
+                results.append(item)
+
+        results.sort(key=lambda x: x['_distance_km'])
         return results
 
