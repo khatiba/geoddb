@@ -1,1 +1,1 @@
-from .geoddb import GeoDDB
+from .geoddb import GeoDDB, GeoItem
