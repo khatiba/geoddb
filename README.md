@@ -136,8 +136,18 @@ Note that at most 9 geohash cells are queried, so your radius shouldn't be large
 You may also set different geohash lengths for different types of your location data. For example: a 5 character long geohash is probably okay for coffee shop searches but not for airports where 3-4 characters might be more appropriate.
 
 
+### Deleting an Item
+To delete an item, provide the latitude, longitude, sort key name, and sort key value:
+
+```python
+gddb.delete_item(lat, lon, sk_name='SK', sk_value='coffee#daydream')
+```
+
+GeoDDB computes the geohash from the coordinates to find the correct partition, then deletes the item matching the given sort key. `delete_item` also accepts `ddb_kwargs` for passing extra arguments like `ConditionExpression`.
+
+
 ### Updating a Location
-This should be an infrequent operation. Obviously since the geohash is generated from the latitude and longitude of the location, in general you can't simply change those values without changing the geohash. Since you can't change the partition key of an item in DynamoDB, you must first delete the record and create a new record. This package doesn't come with any helpers to do this since finding the specific item to delete and re-add depends on your data structure.
+This should be an infrequent operation. Obviously since the geohash is generated from the latitude and longitude of the location, in general you can't simply change those values without changing the geohash. Since you can't change the partition key of an item in DynamoDB, you must first delete the record and create a new record. You can use `delete_item` followed by `put_item` to accomplish this.
 
 
 ## Geohash Cell Dimensions

@@ -27,6 +27,18 @@ class GeoDDB:
 
         return self.table.put_item(Item=item, **ddb_kwargs)
 
+    def delete_item(self, lat: float, lon: float, sk_name: str, sk_value, ddb_kwargs=None) -> dict:
+        if not ddb_kwargs:
+            ddb_kwargs = {}
+
+        geohash = encode(lat, lon, self.precision)
+        key = {
+            self.pk_name: self.get_pk_value(geohash),
+            sk_name: sk_value,
+        }
+
+        return self.table.delete_item(Key=key, **ddb_kwargs)
+
     def query(self, lat: float, lon: float, include_neighbors=True, include_all_pages=True, ddb_kwargs=None) -> [dict]:
         if not ddb_kwargs:
             ddb_kwargs = {}
